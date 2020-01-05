@@ -175,14 +175,20 @@ router.post('/payment-webhook-14567899', (req, res) => {
   if(status == "Credit"){
     var newPaymenyDetail = new paymentDetail({amount, email, name, payment_id, payment_request_id, status});
     newPaymenyDetail.save().then(newE => {
-      
-      EventRegister.findOneAndUpdate({student_id : req.user.email, payment: false} ,{$set:{payment : true}}, (err2, event) => { 
-        if(err2){
-          console.log("--")
-          res.send("Error");}
+      EventRegister.find({student_id: req.user.email, payment: false}, (err, result) =>{
+        if(err){res.send("Error")}
         else{
-          console.log("Success")
-          res.send("Success")
+          var len = len(result);
+          var i=0
+          result.forEach(x=>{
+            EventRegister.findOneAndUpdate({_id : x._id} ,{$set:{payment : true}}, (err2, event) => { 
+              if(i==len-1){
+                console.log("YO");
+                res.send("Success")
+              }
+            });
+            i++;
+          });
         }
       })
     })
