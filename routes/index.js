@@ -133,7 +133,6 @@ router.post('/payment', (req, res) => {
                 });
                 var data = new Insta.PaymentData();
                 total_amount = total_amount + parseInt(req.body.acc);
-                console.log(total_amount)
                 data.purpose = "Test";            // REQUIRED
                 data.amount = total_amount;
                 data.currency                = 'INR';
@@ -152,7 +151,6 @@ router.post('/payment', (req, res) => {
                   } else {
                     // Payment redirection link at response.payment_request.longurl
                     const obj = JSON.parse(response);
-                    console.log(obj);
                     res.redirect(obj.payment_request.longurl)
                   }
                 });
@@ -176,9 +174,10 @@ router.post('/payment-webhook-14567899', (req, res) => {
 
   var newPaymenyDetail = new paymentDetail({amount, email, name, payment_id, payment_request_id, status});
   newPaymenyDetail.save().then(newE => {
-    console.log("Success");
     EventRegister.update({student_id : req.user.email, payment: false} ,{$set:{payment : true}}, (err2, event) => { 
-      if(err2)res.send("Error");
+      if(err2){
+        console.log("--")
+        res.send("Error");}
       else{
         console.log("Success")
         res.send("Success")
@@ -246,7 +245,6 @@ router.get('/dashboard-participate', middleware.ensureAuthenticated , (req,res) 
               EventRegister.find({ team_name : a.team_name, name: a.name}, (err2, result2) => {
                 if(err2)res.send("Error2");
                 else{
-                  console.log(result2)
                   arr.push({ team_name : a.team_name, data : result2 });
                 }
                 if(i==len){
