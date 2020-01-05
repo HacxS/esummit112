@@ -212,6 +212,7 @@
                     <div class="container-fluid">
                         <% if(user.startup == false){ %>
                         <form action="/payment" method="post">
+                          <h5>Student Registration</h5>
                           <div class="row" style="    width: 80%;margin: 25px auto;">
                             <div class="col-sm-6">
                                 <label >Accomodation?</label>
@@ -249,6 +250,47 @@
                         <button type="submit">Pay</button>
                         </form>
                         <% } %>
+                        <% if(user.startup == true){ %>
+                          <form action="/payment" method="post">
+                            <h5>Professional Registration Fee</h5> <p>999</p>
+                            <div class="row" style="width: 80%;margin: 25px auto;">
+                              <div class="col-sm-6">
+                                  <label >Accomodation?</label> 
+                                  <input onclick="ShowHideDiv2()"  class="form-check-input"  style="opacity: 1;z-index: 9;" type="radio" name="acc2" id="exampleRadios11" value="1" required checked>
+                                  <label class="form-check-label" for="exampleRadios11">
+                                    Yes
+                                  </label>
+                                  <input onclick="ShowHideDiv2()" class="form-check-input"  style="opacity: 1;z-index: 9;"  type="radio" name="acc2" id="exampleRadios22" value="0" required>
+                                  <label class="form-check-label" for="exampleRadios22">
+                                    No
+                                  </label>
+                                </div>
+                              <div class="col-sm-6 jjj">
+                                      <div class="form-check" style="    width: 50%;float: left;">
+                                              <input onclick="ShowHideDiv()"  class="form-check-input" style="opacity: 1;z-index: 9;" type="radio" name="acc" id="exampleRadios1" value="2100" required checked>
+                                              <label class="form-check-label" for="exampleRadios1">
+                                                Accommodation (per person cost in twin sharing room outside campus)
+                                              </label>
+                                            </div>
+                                            <div class="form-check" style="    width: 50%;float: left;">
+                                              <input onclick="ShowHideDiv()" class="form-check-input"  style="opacity: 1;z-index: 9;"  type="radio" name="acc" id="exampleRadios2" value="500" required>
+                                              <label class="form-check-label" for="exampleRadios2">
+                                                Accommodation (inside campus)
+                                              </label>
+                                            </div>
+                              </div>   
+                          </div>
+                          <div class="row">
+                            Registered Startup Events : 
+                            <br>
+                            <% startupEvents.forEach(u => { %>
+                              <p><%= u.data.name %> <span><%= u.price %></span></p>
+                              <% }) %>
+                          </div>
+                          <h5 >Total : <span class="tt"><%= amount %></span> </h5>
+                          <button type="submit">Pay</button>
+                          </form>
+                          <% } %>
                     </div>
                 </div>
             </div>
@@ -462,12 +504,18 @@
       </script>
       <script>
         var x = parseInt($('.tt').text())
-        console.log(x)
         $('.tt').text(x + 1499)
         function ShowHideDiv() {
         var chkYes = document.getElementById("exampleRadios1");
         var i = chkYes.checked ? 1499 : 999;
         $('.tt').text(x + i)
+        }
+
+        $('.jjj').show()
+        function ShowHideDiv2() {
+        var chkYes2 = document.getElementById("exampleRadios11");
+        chkYes2.checked ? $('.jjj').show() : $('.jjj').hide();
+        
         }
 
       </script>

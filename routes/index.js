@@ -140,11 +140,11 @@ router.post('/payment', (req, res) => {
                 data.buyer_name              = req.user.first_name;
                 data.email                   = req.user.email;
                 data.phone                   = req.user.phone;
-                data.webhook                 = 'http://localhost:9000/payment-webhook-14567899'
+                data.webhook                 = 'https://payment111.herokuapp.com/payment-webhook-14567899'
                 data.send_sms                = 'True';
                 data.send_email              = 'True';
                 data.allow_repeated_payments = 'False';                  
-                data.setRedirectUrl('http://localhost:9000/dashboard-participate');
+                data.setRedirectUrl('https://payment111.herokuapp.com/dashboard-participate');
                  
                 Insta.createPayment(data, function(error, response) {
                   if (error) {
