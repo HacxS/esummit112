@@ -1,0 +1,476 @@
+
+
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+      <meta charset="utf-8" />
+      <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
+      <link rel="icon" type="image/png" href="assets2/img/favicon.png">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+      <title>
+        ESummit'20
+      </title>
+      <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+      <!--     Fonts and icons     -->
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+      <!-- CSS Files -->
+      <link href="assets2/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
+    
+      <style type="text/css">
+        .dropdown-btn {
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      cursor: pointer;
+      outline: none;
+    }
+    
+    .workshops:hover {
+      background-color: rgba(100,200,200,0.1);
+      color: #f1f1f1;
+      cursor: pointer;
+    }
+    
+    /* On mouse-over */
+    .dropdown-btn:hover {
+      background-color: rgba(100,200,200,0.1);
+      color: #f1f1f1;
+    }
+    #mess{
+        left: 30%!important;
+        height: 55px!important;
+        width: 55%!important;
+        top: 38px!important;
+      }
+    
+    
+    .dropdown-container {
+      padding-left: 20px;
+      display: none;
+    
+      
+    }
+    
+    .add-mem{
+        width: 50%;
+        margin: 10px auto;
+    }
+    
+    @media (max-width: 500px) {
+      .add-mem{
+        width: 100%;
+      }
+    
+      .delete-event{
+        padding: 12px 20px;
+        margin-top: 15px;
+      }
+      .btn-outline-danger{
+        padding: 12px 20px!important;
+      }
+    }
+    
+    tbody td{
+        color: white!important;
+    }
+    
+      </style>
+      
+    </head>
+    
+    <body class="dark-edition">
+      <div class="wrapper ">
+    
+        <div class="sidebar" data-color="purple" data-background-color="black" data-image="assets2/img/sidebar-2.jpg">
+          <div class="logo"><a href="#" class="simple-text logo-normal">
+              ESummit'20
+            </a>
+          </div>
+    
+          <div class="sidebar-wrapper">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/dashboard">
+                  <i class="material-icons">persons</i>
+                  <p>Profile</p>
+                </a>
+              </li>
+    
+    
+              <li class="nav-item">
+                <a class="nav-link dropdown-btn" href="/dashboard">
+                  <i class="fa fa-caret-down"></i>
+                  <p>Participate</p>
+                </a>
+                
+                <div class="dropdown-container">
+    
+                  <a class="nav-link dropdown-btn">
+                      <i class="fa fa-caret-down"></i>
+                      <p>Events</p>
+                  </a>
+                
+                  <div class="dropdown-container ">
+                        <% if(user.startup == false){ %>
+                            <a class="nav-link workshops student-panel">
+                              <i class="material-icons">events</i>
+                              <p>Student Events</p>
+                            </a>
+                            <% } %>
+                    <a class="nav-link workshops">
+                      <i class="material-icons">events</i>
+                      <p>Startup Events</p>
+                    </a>
+                  </div>
+    
+                  <% if(user.startup == false){ %>
+                  <a class="nav-link workshops" href="#">
+                    <i class="material-icons">work</i>
+                    <p>Workshops</p>
+                  </a>
+                  <% } %>
+    
+                </div>
+            </li>
+    
+              <li class="nav-item ">
+                <a class="nav-link" href="/dashboard-participate">
+                  <i class="material-icons">content_paste</i>
+                  <p>My Participations</p>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/payment">
+                  <i class="material-icons">content_paste</i>
+                  <p>Payments</p>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/dashboard">
+                  <i class="material-icons">schedules</i>
+                  <p>Schedule</p>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/dashboard">
+                  <i class="material-icons">maps</i>
+                  <p>Campus Map</p>
+                </a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/dashboard">
+                  <i class="material-icons">contacts</i>
+                  <p>Contacts</p>
+                </a>
+              </li>
+              
+              <li class="nav-item ">
+                    <a class="nav-link" href="/">
+                      <i class="material-icons">home</i>
+                      <p>Home</p>
+                    </a>
+                </li>
+    
+                <li class="nav-item ">
+                    <a class="nav-link" href="/logout">
+                        <i class="material-icons">logout</i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+    
+        <% include ./partials/messages %>
+    
+    
+        <div class="main-panel">
+           
+          <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
+            <div class="container-fluid">
+              <div class="navbar-wrapper">
+                <a class="navbar-brand" href="javascript:void(0)">Dashboard</a>
+              </div>
+             <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+                <span class="navbar-toggler-icon icon-bar"></span>
+              </button>
+    
+            </div>
+          </nav> 
+          <!-- End Navbar -->
+            <div class="content mypart" style="min-height:auto;">
+                <div class="card" style="padding-bottom: 50px;color: white;">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Payment details</h4>
+                       <!--  <p class="card-category">Note: If you are the leader of the team, then deleting/leaving the team would dissolve the entire team. </p>
+                     --></div>
+                    <div class="container-fluid">
+                        <% if(user.startup == false){ %>
+                        <form action="/payment" method="post">
+                          <div class="row" style="    width: 80%;margin: 25px auto;">
+                            <div class="col-sm-6">
+                                <label >Accomodation?</label>
+                            </div>
+                            <div class="col-sm-6">
+                                    <div class="form-check" style="    width: 50%;float: left;">
+                                            <input onclick="ShowHideDiv()"  class="form-check-input" class="rad" style="opacity: 1;z-index: 9;" type="radio" name="acc" id="exampleRadios1" value="1499" required checked>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                              Yes
+                                            </label>
+                                          </div>
+                                          <div class="form-check" style="    width: 50%;float: left;">
+                                            <input onclick="ShowHideDiv()" class="form-check-input" class="rad" style="opacity: 1;z-index: 9;"  type="radio" name="acc" id="exampleRadios2" value="999" required>
+                                            <label class="form-check-label" for="exampleRadios2">
+                                              No
+                                            </label>
+                                          </div>
+                            </div>   
+                        </div>
+                        <div class="row">
+                          Registered Workshops : 
+                          <br>
+                          <% workshop.forEach(t => { %>
+                            <p><%= t.data.workshop_name %> <span><%= t.price %></span></p>
+                            <% }) %>
+                        </div>
+                        <div class="row">
+                          Registered Startup Events : 
+                          <br>
+                          <% startupEvents.forEach(u => { %>
+                            <p><%= u.data.name %> <span><%= u.price %></span></p>
+                            <% }) %>
+                        </div>
+                        <h5 >Total : <span class="tt"><%= amount %></span> </h5>
+                        <button type="submit">Pay</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+     
+      <!--   Core JS Files   -->
+      <script src="assets2/js/core/jquery.min.js"></script>
+      <script src="assets2/js/core/popper.min.js"></script>
+      <script src="assets2/js/core/bootstrap-material-design.min.js"></script>
+      <script src="https://unpkg.com/default-passive-events"></script>
+      <script src="assets2/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+      <!-- Place this tag in your head or just before your close body tag. -->
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+      <!--  Google Maps Plugin    -->
+      <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+      <!-- Chartist JS -->
+      <script src="assets2/js/plugins/chartist.min.js"></script>
+      <!--  Notifications Plugin    -->
+      <script src="assets2/js/plugins/bootstrap-notify.js"></script>
+      <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+      <script src="assets2/js/material-dashboard.js?v=2.1.0"></script>
+      <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+      <script src="assets2/demo/demo.js"></script>
+    
+      <script type="text/javascript">
+      
+        var dropdown = document.getElementsByClassName("dropdown-btn");
+        var i;
+    
+        for (i = 0; i < dropdown.length; i++) {
+          dropdown[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === "block") {
+              dropdownContent.style.display = "none";
+            } else {
+              dropdownContent.style.display = "block";
+            }
+          });
+    } 
+      </script>
+      <script>
+        $(document).ready(function() {
+          $().ready(function() {
+            $sidebar = $('.sidebar');
+    
+            $sidebar_img_container = $sidebar.find('.sidebar-background');
+    
+            $full_page = $('.full-page');
+    
+            $sidebar_responsive = $('body > .navbar-collapse');
+    
+            window_width = $(window).width();
+    
+            $('.fixed-plugin a').click(function(event) {
+              // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+              if ($(this).hasClass('switch-trigger')) {
+                if (event.stopPropagation) {
+                  event.stopPropagation();
+                } else if (window.event) {
+                  window.event.cancelBubble = true;
+                }
+              }
+            });
+    
+            $('.fixed-plugin .active-color span').click(function() {
+              $full_page_background = $('.full-page-background');
+    
+              $(this).siblings().removeClass('active');
+              $(this).addClass('active');
+    
+              var new_color = $(this).data('color');
+    
+              if ($sidebar.length != 0) {
+                $sidebar.attr('data-color', new_color);
+              }
+    
+              if ($full_page.length != 0) {
+                $full_page.attr('filter-color', new_color);
+              }
+    
+              if ($sidebar_responsive.length != 0) {
+                $sidebar_responsive.attr('data-color', new_color);
+              }
+            });
+    
+            $('.fixed-plugin .background-color .badge').click(function() {
+              $(this).siblings().removeClass('active');
+              $(this).addClass('active');
+    
+              var new_color = $(this).data('background-color');
+    
+              if ($sidebar.length != 0) {
+                $sidebar.attr('data-background-color', new_color);
+              }
+            });
+    
+            $('.fixed-plugin .img-holder').click(function() {
+              $full_page_background = $('.full-page-background');
+    
+              $(this).parent('li').siblings().removeClass('active');
+              $(this).parent('li').addClass('active');
+    
+    
+              var new_image = $(this).find("img").attr('src');
+    
+              if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                $sidebar_img_container.fadeOut('fast', function() {
+                  $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                  $sidebar_img_container.fadeIn('fast');
+                });
+              }
+    
+              if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+    
+                $full_page_background.fadeOut('fast', function() {
+                  $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                  $full_page_background.fadeIn('fast');
+                });
+              }
+    
+              if ($('.switch-sidebar-image input:checked').length == 0) {
+                var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+                var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+    
+                $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+              }
+    
+              if ($sidebar_responsive.length != 0) {
+                $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+              }
+            });
+    
+            $('.switch-sidebar-image input').change(function() {
+              $full_page_background = $('.full-page-background');
+    
+              $input = $(this);
+    
+              if ($input.is(':checked')) {
+                if ($sidebar_img_container.length != 0) {
+                  $sidebar_img_container.fadeIn('fast');
+                  $sidebar.attr('data-image', '#');
+                }
+    
+                if ($full_page_background.length != 0) {
+                  $full_page_background.fadeIn('fast');
+                  $full_page.attr('data-image', '#');
+                }
+    
+                background_image = true;
+              } else {
+                if ($sidebar_img_container.length != 0) {
+                  $sidebar.removeAttr('data-image');
+                  $sidebar_img_container.fadeOut('fast');
+                }
+    
+                if ($full_page_background.length != 0) {
+                  $full_page.removeAttr('data-image', '#');
+                  $full_page_background.fadeOut('fast');
+                }
+    
+                background_image = false;
+              }
+            });
+    
+            $('.switch-sidebar-mini input').change(function() {
+              $body = $('body');
+    
+              $input = $(this);
+    
+              if (md.misc.sidebar_mini_active == true) {
+                $('body').removeClass('sidebar-mini');
+                md.misc.sidebar_mini_active = false;
+    
+                $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+    
+              } else {
+    
+                $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+    
+                setTimeout(function() {
+                  $('body').addClass('sidebar-mini');
+    
+                  md.misc.sidebar_mini_active = true;
+                }, 300);
+              }
+    
+              // we simulate the window Resize so the charts will get updated in realtime.
+              var simulateWindowResize = setInterval(function() {
+                window.dispatchEvent(new Event('resize'));
+              }, 180);
+    
+              // we stop the simulation of Window Resize after the animations are completed
+              setTimeout(function() {
+                clearInterval(simulateWindowResize);
+              }, 1000);
+    
+            });
+          });
+        });
+      </script>
+      <script>
+        $(document).ready(function() {
+          // Javascript method's body can be found in assets/js/demos.js
+          md.initDashboardPageCharts();
+    
+        });
+      </script>
+      <script>
+        var x = parseInt($('.tt').text())
+        console.log(x)
+        $('.tt').text(x + 1499)
+        function ShowHideDiv() {
+        var chkYes = document.getElementById("exampleRadios1");
+        var i = chkYes.checked ? 1499 : 999;
+        $('.tt').text(x + i)
+        }
+
+      </script>
+    </body>
+    
+    </html>
