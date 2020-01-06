@@ -39,7 +39,7 @@ router.get('/', (req,res) => {
 
 // Payment
 
-router.get('/payment', (req, res) => {
+router.get('/payment', middleware.ensureAuthenticated, (req, res) => {
   var total_amount = 0;
   WorkshopRegister.find({email : req.user.email, payment : false}, (err, result) => {
     if(err){
@@ -99,7 +99,7 @@ router.get('/payment', (req, res) => {
   })
 })
 
-router.post('/payment', (req, res) => {
+router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
   var total_amount = 0;
   
   WorkshopRegister.find({email : req.user.email, payment : false}, (err, result) => {
@@ -164,7 +164,7 @@ router.post('/payment', (req, res) => {
                   res.redirect('/payment')
                 }
                 else{
-                  data.purpose = "Test";            // REQUIRED
+                  data.purpose = "E-Summit 2020 IIT(BHU) Varanasi: "+ req.user.esummit_id;            // REQUIRED
                   data.amount = total_amount;
                   data.currency                = 'INR';
                   data.buyer_name              = req.user.first_name;
@@ -197,7 +197,7 @@ router.post('/payment', (req, res) => {
 
 });
 
-router.get('/pay789456', (req, res)=>{
+router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
   var payment_id = req.query.payment_id;
   var payment_request_id = req.query.payment_request_id;
   var status = req.query.payment_status;
@@ -536,18 +536,30 @@ router.get("/tab",  function(req, res) {
   res.render('tab')
 })
 
-router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
-    User.updateMany({} ,{$set:{registration : false}}, (err3, event3) => { 
-      if(err3){
-        console.log(err3)
-        res.send(err3)
-      }
-      else{
-        res.send("Success")
-      }
-    })
-})
-
+/* router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
+  User.find({}, (err, result) => {
+    if(err)res.send(err);
+    else{
+      var i = 3456
+      result.forEach(x => {
+        var eid = "ES-"+ i;
+        getAThing(eid, x);
+        i++;
+      });
+    }
+    res.send("Success")
+  })
+    
+});
+async function getAThing(eid, x) {
+  await User.findOneAndUpdate({email : x.email} ,{$set:{esummit_id : eid}}, (err3, event3) => { 
+    if(err3){
+      console.log(err3)
+    }else{
+      console.log("-")
+    }
+  });
+} */
 
 // Authentication
 
