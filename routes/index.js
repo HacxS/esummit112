@@ -6,6 +6,7 @@ var Workshop = require("../models/workshop");
 var EventRegister = require("../models/eventRegister");
 var WorkshopRegister = require("../models/workshopRegister");
 var paymentDetail = require("../models/paymentDetail");
+var webhook = require("../models/webhook")
 var middleware = require('../config');
 var passport = require("passport");
 var bcrypt = require('bcryptjs');
@@ -169,10 +170,11 @@ router.post('/payment', (req, res) => {
                   data.buyer_name              = req.user.first_name;
                   data.email                   = req.user.email;
                   data.phone                   = req.user.phone;
+                  data.webhook                 = 'https://payment111.herokuapp.com/payment-webhook-14567899'
                   data.send_sms                = 'True';
                   data.send_email              = 'True';
                   data.allow_repeated_payments = 'False';                  
-                  data.setRedirectUrl('http://localhost:9000/pay789456');
+                  data.setRedirectUrl('https://payment111.herokuapp.com/pay789456');
                    
                   Insta.createPayment(data, function(error, response) {
                     if (error) {
@@ -244,27 +246,12 @@ router.post('/payment-webhook-14567899', (req, res) => {
   var payment_request_id = req.body.payment_request_id;
   var status = req.body.status;
 
-  if(status == "Credit"){
-    var newPaymenyDetail = new paymentDetail({amount, email, name, payment_id, payment_request_id, status});
-    newPaymenyDetail.save().then(newE => {
-      EventRegister.find({student_id: req.user.email, payment: false}, (err, result) =>{
-        if(err){res.send("Error")}
-        else{
-          var len = len(result);
-          var i=0
-          result.forEach(x=>{
-            EventRegister.findOneAndUpdate({_id : x._id} ,{$set:{payment : true}}, (err2, event) => { 
-              if(i==len-1){
-                console.log("YO");
-                res.send("Success");
-              }
-            });
-            i++;
-          });
-        }
-      })
+ 
+    var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
+    webhookdetail.save().then(newE => {
+      res.send("Success")
     })
-  }
+  
 
 
 })
