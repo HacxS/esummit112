@@ -233,8 +233,14 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
     })
   }
   else{
-    req.flash('error_msg','Payment Failed');
-    res.redirect('/dashboard-participate');
+    var newPaymentDetail = new paymentDetail({ email, name, payment_id, payment_request_id, status});
+    newPaymentDetail.save((err, rest)=>{
+      if(err)res.send(err)
+      else{
+      req.flash('error_msg','Payment Failed');
+      res.redirect('/dashboard-participate');
+      }
+    });
   }
 })
 
