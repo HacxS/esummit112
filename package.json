@@ -21,7 +21,7 @@
     "express-session": "^1.15.2",
     "instamojo-nodejs": "0.0.5",
     "method-override": "^2.3.8",
-    "mongoose": "^4.9.1",
+    "mongoose": "^5.7.5",
     "nodemailer": "^4.7.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
