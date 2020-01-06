@@ -4,10 +4,6 @@ var passportLocalMongoose = require("passport-local-mongoose");
 
 
 var paymentDetailSchema = new mongoose.Schema({
-   amount: {
-    type: Number,
-    required: true
-  },
   email : {
       type : String,
       default : true

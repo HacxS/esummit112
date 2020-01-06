@@ -64,6 +64,10 @@ var userSchema = new mongoose.Schema({
   esummit_id : {
     type : Boolean,
     default : null
+  },
+  registration : {
+    type : Boolean,
+    default : false
   }
 })
 

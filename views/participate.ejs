@@ -232,6 +232,7 @@ tbody td{
                                     <thead class=" text-primary">
                                         <th>Email ID</th>
                                         <th>Position</th>
+                                        <th>Payment/Registration</th>
                                         <th>Action</th>
                                     </thead>
                                     <tbody>
@@ -250,6 +251,12 @@ tbody td{
                                             <% }else{ %>
                                                 <td>Participant</td>
                                             <% } %>
+                                            <% if( p.payment == true){ %>
+                                              <td>Done</td>
+                                              <% }else{ %>
+                                                <td>Pending</td>
+                                                <% } %>
+                                              <td>
                                             <% if(p.student_id == user.email && p.status==false){ %>
                                                 <td class="text-primary">
                                                     <form id="add-member" method="get" action="/dashboard/accept-event/<%= t._id %>">
@@ -259,8 +266,8 @@ tbody td{
                                             <% } %>
                                             <% if((p.leader_id != user.email && p.student_id== user.email)  ||  (p.student_id != p.leader_id && p.student_id == user.email) || (p.leader_id == user.email && p.student_id != user.email)){ %>
                                                 <td>
-                                                    <form id="add-member" method="get" action="/dashboard/reject-event/<%= p._id %>">
-                                                        <button style="background-color: #d52c2c;" type="submit" class="btn btn-outline-danger"> Delete </button>
+                                                    <form id="add-member" method="get"  action="/dashboard/reject-event/<%= p._id %>">
+                                                        <button style="background-color: #d52c2c;" type="submit"  class="deleteItem btn btn-outline-danger"> Delete </button>
                                                     </form>
                                                 </td>
                                             <% } %>
@@ -287,8 +294,8 @@ tbody td{
                         <% } %>
 
                         <% if( t.leader_id == user.email ){ %>
-                            <form id="add-member" method="get" style="width: max-content; margin: 10px auto;" action="/dashboard/discard-event/<%= t.team_name %>">
-                                <button style="background-color: #d52c2c;" type="submit" class="delete-event btn btn-outline-danger"> Delete Event </button>
+                            <form id="add-member" method="get" style="width: max-content; margin: 10px auto;" action="/dashboard/discard-event/<%= t.team_name %>/<%= t.name %>">
+                                <button style="background-color: #d52c2c;"  type="submit"  class="deleteItem delete-event btn btn-outline-danger"> Delete Event </button>
                             </form>
                         <% } %>
                         <hr style="border: 1px solid #8026a1;">
@@ -311,27 +318,39 @@ tbody td{
                         <p class="card-category">Note: There is no team formation in workshops. </p>
                     </div>
                     <div class="container-fluid">
-                            <% registeredWorkshops.forEach(t => { %>
+                            
                                 <div class="card-body">
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <thead class=" text-primary">
                                                     <th>Workshop Name</th>
                                                     <th>Student Name</th>
+                                                    <th>Payment/Registration</th>
                                                     <th>Action</th>
                                                 </thead>
                                                 <tbody>
+                                                  <% registeredWorkshops.forEach(t => { %>
                                                     <tr>
                                                         <td><%= t.workshop_name %></td>
                                                         <td><%= user.first_name %></td>
+                                                        <% if(t.payment == true){ %>
+                                                        <td>Done</td>
+                                                        <% }else{ %>
+                                                          <td>Pending</td>
+                                                          <% } %>
                                                         <td>
                                                             <form id="add-member" method="get" action="/dashboard/reject-workshop/<%= t._id %>">
-                                                                <button style="background-color: #d52c2c;" type="submit" class="btn btn-outline-danger"> Delete </button>
+                                                                <button style="background-color: #d52c2c;" type="submit" class="deleteItem btn btn-outline-danger"> Delete </button>
                                                             </form>
                                                         </td>
                                                     </tr>
-
-                            <% }) %>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                        
+                  
 
                             <% if(registeredWorkshops.length == 0){ %>
                                 <h3 style="text-align: center;font-size: 19px;">You have not added any workshops yet.</h3>
@@ -386,6 +405,17 @@ tbody td{
 } 
   </script>
   <script>
+    function removeEvent(e) {
+      
+    }
+    $(".deleteItem").click(function(event)
+    {
+      var bb = window.confirm("Are you sure you want to delete the event/workshop?");
+      if(!bb){
+        event.preventDefault();
+      }
+    });
+
     $(document).ready(function() {
       $().ready(function() {
         $sidebar = $('.sidebar');

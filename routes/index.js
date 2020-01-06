@@ -78,6 +78,14 @@ router.get('/payment', (req, res) => {
                     total_amount = total_amount + 999;
                     arr2.push({price : 999, data : u})
                   }
+                  if(u.name == "LoneWolf Challenge"){
+                    total_amount = total_amount + 0;
+                    arr2.push({price : 0, data : u})
+                  }
+                  if(u.name == "Panel Discussions"){
+                    total_amount = total_amount + 0;
+                    arr2.push({price : 0, data : u})
+                  }
                 });
                 res.render('payment', {user: req.user, workshop : arr, startupEvents : arr2, amount : total_amount});
               
@@ -92,6 +100,7 @@ router.get('/payment', (req, res) => {
 
 router.post('/payment', (req, res) => {
   var total_amount = 0;
+  
   WorkshopRegister.find({email : req.user.email, payment : false}, (err, result) => {
     if(err){
       res.send("Error")
@@ -130,30 +139,52 @@ router.post('/payment', (req, res) => {
                     total_amount = total_amount + 999;
                     arr2.push({price : 999, data : u})
                   }
-                });
-                var data = new Insta.PaymentData();
-                total_amount = total_amount + parseInt(req.body.acc);
-                data.purpose = "Test";            // REQUIRED
-                data.amount = total_amount;
-                data.currency                = 'INR';
-                data.buyer_name              = req.user.first_name;
-                data.email                   = req.user.email;
-                data.phone                   = req.user.phone;
-                data.webhook                 = 'https://payment111.herokuapp.com/payment-webhook-14567899'
-                data.send_sms                = 'True';
-                data.send_email              = 'True';
-                data.allow_repeated_payments = 'False';                  
-                data.setRedirectUrl('https://payment111.herokuapp.com/dashboard-participate');
-                 
-                Insta.createPayment(data, function(error, response) {
-                  if (error) {
-                    // some error
-                  } else {
-                    // Payment redirection link at response.payment_request.longurl
-                    const obj = JSON.parse(response);
-                    res.redirect(obj.payment_request.longurl)
+                  if(u.name == "LoneWolf Challenge"){
+                    total_amount = total_amount + 0;
+                    arr2.push({price : 0, data : u})
+                  }
+                  if(u.name == "Panel Discussions"){
+                    total_amount = total_amount + 0;
+                    arr2.push({price : 0, data : u})
                   }
                 });
+                var data = new Insta.PaymentData();
+                if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1){
+                  total_amount = total_amount + parseInt(req.body.acc) + 999;
+                }
+                if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 0){
+                  total_amount = total_amount + 999;
+                }
+                if(req.user.startup == false && req.user.registration == false){
+                  total_amount = total_amount + parseInt(req.body.acc);
+                }
+                if(total_amount == 0){
+                  req.flash('error_msg','You cannot pay a zero amount');
+                  res.redirect('/payment')
+                }
+                else{
+                  data.purpose = "Test";            // REQUIRED
+                  data.amount = total_amount;
+                  data.currency                = 'INR';
+                  data.buyer_name              = req.user.first_name;
+                  data.email                   = req.user.email;
+                  data.phone                   = req.user.phone;
+                  data.send_sms                = 'True';
+                  data.send_email              = 'True';
+                  data.allow_repeated_payments = 'False';                  
+                  data.setRedirectUrl('http://localhost:9000/pay789456');
+                   
+                  Insta.createPayment(data, function(error, response) {
+                    if (error) {
+                      // some error
+                    } else {
+                      // Payment redirection link at response.payment_request.longurl
+                      const obj = JSON.parse(response);
+                      res.redirect(obj.payment_request.longurl)
+                    }
+                  });
+                }
+
             }
           })
         }
@@ -163,6 +194,47 @@ router.post('/payment', (req, res) => {
   })
 
 });
+
+router.get('/pay789456', (req, res)=>{
+  var payment_id = req.query.payment_id;
+  var payment_request_id = req.query.payment_request_id;
+  var status = req.query.payment_status;
+  var email = req.user.email;
+  var name = req.user.first_name;
+  console.log(status)
+  if(status == "Credit"){
+    var newPaymentDetail = new paymentDetail({ email, name, payment_id, payment_request_id, status});
+    newPaymentDetail.save((err, rest)=>{
+      if(err)res.send(err)
+      else{
+        EventRegister.updateMany({student_id: req.user.email, payment: false} ,{$set:{payment : true}}, (err2, event) => { 
+          if(err2)res.send("errrrr")
+          else{
+            WorkshopRegister.updateMany({email: req.user.email, payment: false} ,{$set:{payment : true}}, (err3, event3) => { 
+              if(err2)res.send("errrrr")
+              else{
+                User.findOneAndUpdate({email : req.user.email}, {$set:{registration : true}}, (err3, reuslt3) =>{
+                  if(err3)res.send("Error");
+                  else{
+                    
+                    req.flash('success_msg','Payment Success');
+                    res.redirect('/dashboard-participate');
+                  }
+                })
+                
+              }
+            });
+          }
+        });
+      }
+      
+    })
+  }
+  else{
+    req.flash('error_msg','Payment Failed');
+    res.redirect('/dashboard-participate');
+  }
+})
 
 router.post('/payment-webhook-14567899', (req, res) => {
   var email = req.body.buyer;
@@ -184,7 +256,7 @@ router.post('/payment-webhook-14567899', (req, res) => {
             EventRegister.findOneAndUpdate({_id : x._id} ,{$set:{payment : true}}, (err2, event) => { 
               if(i==len-1){
                 console.log("YO");
-                res.send("Success")
+                res.send("Success");
               }
             });
             i++;
@@ -284,9 +356,10 @@ router.post('/dashboard/event', middleware.ensureAuthenticated , (req,res) => {
   var student_id = req.user.email;
   var status = true;
   var team_name = req.body.team_name;
+  var payment = (req.user.registration) ? true : false;
   Event.findOne({_id : event_id}, (err, result) => {
     name = result.name;
-    var newEventRegister = new EventRegister({ event_id, name, team_name, leader_id, student_id, status});
+    var newEventRegister = new EventRegister({ event_id, name, team_name, leader_id, student_id, status, payment: payment});
     newEventRegister.save().then(newEvent => {
       req.flash('success_msg','You have registered this event');
       res.redirect('/dashboard-participate');
@@ -300,7 +373,7 @@ router.post('/dashboard/workshop', middleware.ensureAuthenticated , (req,res) =>
   var email = req.user.email;
   var name = req.user.first_name + req.user.last_name;
 
-  WorkshopRegister.findOne({email : email}, (err, result) => {
+  WorkshopRegister.findOne({email : email, _id : workshop_id}, (err, result) => {
     if(!result){
       Workshop.findById(workshop_id, (er, rr) =>{
         if(er)res.send("Error");
@@ -328,6 +401,7 @@ router.post('/dashboard/add-member-event/:id/:name/:event_name', middleware.ensu
   var student_id = req.body.email;
   var name = req.body.event_name;
   var team_name = req.params.name;
+  
   if(student_id != req.user.email){
     EventRegister.find({ team_name : team_name, name : name}, (error, result2) => {
       if(error)res.send("Error");
@@ -346,22 +420,30 @@ router.post('/dashboard/add-member-event/:id/:name/:event_name', middleware.ensu
             }
           });
           if(flag == 0){
-            Event.findOne({_id : event_id}, (err, result) => {
-              name = result.name;
+            Event.findOne({_id : event_id}, (err, result5) => {
+              name = result5.name;
+              student = result5.student;
               User.findOne({email : student_id}, (err, result) => {
                 if(err)res.send("Error")
                 else {
-                  if(result){
-                    var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id});
-                    newEventRegister.save().then(newEvent => {
-                      req.flash('success_msg','You have added a member');
+                  if(student != result.startup){
+                    if(result){
+                      var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : result.registration});
+                      newEventRegister.save().then(newEvent => {
+                        req.flash('success_msg','You have added a member');
+                        res.redirect('/dashboard-participate');
+                        })
+                    }
+                    else{
+                      req.flash('success_msg','Email Id does not exist');
                       res.redirect('/dashboard-participate');
-                      })
+                    }
                   }
                   else{
-                    req.flash('success_msg','Email Id does not exist');
+                    req.flash('error_msg','Could not add member as person has a startup and this is student event');
                     res.redirect('/dashboard-participate');
                   }
+                  
                 }
               })
             });
@@ -441,9 +523,10 @@ router.get('/dashboard/reject-workshop/:id', middleware.ensureAuthenticated , (r
   })
 });
 
-router.get('/dashboard/discard-event/:name', middleware.ensureAuthenticated , (req,res) => {
-  var team_name = req.params.name;
-  EventRegister.deleteMany({ team_name : team_name }, (err, rest) => {
+router.get('/dashboard/discard-event/:team_name/:name', middleware.ensureAuthenticated , (req,res) => {
+  var team_name = req.params.team_name;
+  var name = req.params.name;
+  EventRegister.deleteMany({leader_id : req.user.email, name: name , team_name : team_name }, (err, rest) => {
     req.flash('success_msg','You have deleted the event');
     res.redirect('/dashboard-participate');
   })
@@ -463,6 +546,18 @@ router.post('/event-post', (req, res) => {
 
 router.get("/tab",  function(req, res) {
   res.render('tab')
+})
+
+router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
+    User.updateMany({} ,{$set:{registration : false}}, (err3, event3) => { 
+      if(err3){
+        console.log(err3)
+        res.send(err3)
+      }
+      else{
+        res.send("Success")
+      }
+    })
 })
 
 
