@@ -165,7 +165,7 @@ router.post('/payment', (req, res) => {
                 }
                 else{
                   data.purpose = "Test";            // REQUIRED
-                  data.amount = 6;
+                  data.amount = total_amount;
                   data.currency                = 'INR';
                   data.buyer_name              = req.user.first_name;
                   data.email                   = req.user.email;
