@@ -170,11 +170,11 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                   data.buyer_name              = req.user.first_name;
                   data.email                   = req.user.email;
                   data.phone                   = req.user.phone;
-                  data.webhook                 = 'https://payment111.herokuapp.com/payment-webhook-14567899'
+                  data.webhook                 = 'https://esummitiitbhu.com//payment-webhook-14567899'
                   data.send_sms                = 'True';
                   data.send_email              = 'True';
                   data.allow_repeated_payments = 'False';                  
-                  data.setRedirectUrl('https://payment111.herokuapp.com/pay789456');
+                  data.setRedirectUrl('https://esummitiitbhu.com//pay789456');
                    
                   Insta.createPayment(data, function(error, response) {
                     if (error) {
@@ -237,7 +237,8 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
     newPaymentDetail.save((err, rest)=>{
       if(err)res.send(err)
       else{
-      req.flash('error_msg','Payment Failed');
+        console.log("h")
+      req.flash('error_msg','Payment Failed1');
       res.redirect('/dashboard-participate');
       }
     });
