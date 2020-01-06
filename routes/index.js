@@ -16,7 +16,7 @@ const refer = require('../security/refer');
 var request= require('request');
 
 var Insta = require('instamojo-nodejs');
-Insta.setKeys('test_bb088db45573b736d4c98742fff', 'test_ed12af4b6853090ee92b63e564d')
+Insta.setKeys('56cff578f3406493616ced90f2a855c0', 'acdd9b4a9c93ce7825438d2cd4dc56ef')
 
 
 var smtpTransport = nodemailer.createTransport({
