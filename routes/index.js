@@ -345,7 +345,7 @@ router.post('/dashboard/event', middleware.ensureAuthenticated , (req,res) => {
   var team_name = req.body.team_name;
   Event.findOne({_id : event_id}, (err, result) => {
     name = result.name;
-    var payment = (req.user.registration && result.student) ? true : false;
+    var payment = (req.user.registration && result.student && result.name != "Intern Connect" && result.name!= "Panel Discussions") ? true : false;
     var newEventRegister = new EventRegister({ event_id, name, team_name, leader_id, student_id, status, payment: payment});
     newEventRegister.save().then(newEvent => {
       req.flash('success_msg','You have registered this event');
