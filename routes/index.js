@@ -415,7 +415,8 @@ router.post('/dashboard/add-member-event/:id/:name/:event_name', middleware.ensu
                 else {
                   if(student != result.startup){
                     if(result){
-                      var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : result.registration});
+                      var payment = (req.user.registration && result5.student && result5.name != "Intern Connect" && result5.name!= "Panel Discussions") ? true : false;
+                      var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
                       newEventRegister.save().then(newEvent => {
                         req.flash('success_msg','You have added a member');
                         res.redirect('/dashboard-participate');
