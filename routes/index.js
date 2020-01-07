@@ -294,7 +294,7 @@ router.get('/dashboard', middleware.ensureAuthenticated , (req,res) => {
             EventRegister.find({ student_id : req.user.email}, (err3, result4) => {
               
               EventRegister.find({ leader_id : req.user.email}, (err3, result5) => {
-              res.render("dashboard", { user : req.user, events : events, registeredEvents : result4, workshops : workshops, leaderEvents : result5});
+              res.render("dashboard", { user : req.user, events : events, registeredEvents : result4, workshops : workshops, leaderEvents : result5, type: req.query.type});
             })
             
           })

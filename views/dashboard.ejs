@@ -80,7 +80,7 @@
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item ">
-            <a class="nav-link profile-panel" >
+            <a class="nav-link profile-panel" href="/dashboard?type=profile">
               <i class="material-icons">persons</i>
               <p>Profile</p>
             </a>
@@ -103,20 +103,20 @@
               <div class="dropdown-container ">
                   
                 <% if(user.startup == false){ %>
-                <a class="nav-link workshops student-panel">
+                <a class="nav-link workshops student-panel" href="/dashboard?type=student">
                   <i class="material-icons">events</i>
                   <p>Student Events</p>
                 </a>
                 <% } %>
 
-                <a class="nav-link workshops startup-panel">
+                <a class="nav-link workshops startup-panel" href="/dashboard?type=startup">
                   <i class="material-icons">events</i>
                   <p>Startup Events</p>
                 </a>
               </div>
 
               <% if(user.startup == false){ %>
-              <a class="nav-link workshops workshop-panel" >
+              <a class="nav-link workshops workshop-panel" href="/dashboard?type=workshop" >
                 <i class="material-icons">work</i>
                 <p>Workshops</p>
               </a>
@@ -134,24 +134,24 @@
           </li>
           <li class="nav-item ">
             <a class="nav-link" href="/payment">
-              <i class="material-icons">content_paste</i>
+              <i class="material-icons">payment</i>
               <p>Payments</p>
             </a>
           </li>
-          <li class="nav-item schedule-panel">
-            <a class="nav-link" >
+          <!-- <li class="nav-item schedule-panel">
+            <a class="nav-link" href="/dashboard?type=schedule">
               <i class="material-icons">schedules</i>
               <p>Schedule</p>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item campus-panel">
-            <a class="nav-link" >
+            <a class="nav-link" href="/dashboard?type=campus">
               <i class="material-icons">maps</i>
               <p>Campus Map</p>
             </a>
           </li>
           <li class="nav-item contact-panel">
-            <a class="nav-link" >
+            <a class="nav-link" href="/dashboard?type=contact">
               <i class="material-icons">contacts</i>
               <p>Contacts</p>
             </a>
@@ -200,6 +200,8 @@
       </nav> 
       <% include ./partials/messages %>
       <!-- End Navbar -->
+
+      <% if(type == "profile"){ %>
       <div class="content profile">
         <div class="container-fluid">
           
@@ -303,12 +305,13 @@
           </div>
         </div>
       </div>
+      <% } %>
 
-
+      <% if(type == "student"){ %>
       <div class="content student">
         <div class="card" style="padding-bottom: 50px;">
             <div class="card-header card-header-primary">
-                <h4 class="card-title">Team Registration</h4>
+                <h4 class="card-title">Student Events Team Registration</h4>
             </div>
             <div class="container-fluid">
                     <form name="event-add-form" action="/dashboard/event" id="event-add-form" method="POST" >
@@ -339,11 +342,13 @@
             </div>
           </div>
       </div>
-    
+      <% } %>
+
+      <% if(type == "startup"){ %>
     <div class="content startup">
         <div class="card" style="padding-bottom: 50px;">
                 <div class="card-header card-header-primary">
-                    <h4 class="card-title">Team Registration</h4>
+                    <h4 class="card-title">Startup Events Team Registration</h4>
                 </div>
         <div class="container-fluid">
                 <form name="event-add-form" action="/dashboard/event" id="event-add-form" method="POST" >
@@ -375,6 +380,9 @@
         </div>
         </div>
     </div>
+    <% } %>
+
+    <% if(type == "workshop"){ %>
     <div class="content workshop">
             <div class="card" style="padding-bottom: 50px;">
                     <div class="card-header card-header-primary">
@@ -406,16 +414,21 @@
             </div>
             </div>
         </div>
+        <% } %>
 
-
+   <!--      <% if(type == "schedule"){ %>
     <div class="content schedule">
         <h3>Coming Soon!!!</h3>
     </div>
+    <% } %> -->
 
+    <% if(type == "campus"){ %>
     <div class="content campus">
         <h3>Coming Soon!!!</h3>
     </div>
+    <% } %>
 
+    <% if(type == "contact"){ %>
     <div class="content contact">
       <div class="card" style="padding-bottom: 50px;">
         <div class="card-header card-header-primary">
@@ -449,6 +462,7 @@
         </div>
       </div>
     </div>
+    <% } %>
 
 
   </div>
@@ -483,7 +497,7 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="assets2/demo/demo.js"></script>
 
-  <script>
+ <!--  <script>
 
 
     $('.nav-mobile-menu').hide();
@@ -559,7 +573,7 @@
         $('.workshop').fadeIn();
       });
       
-  </script>
+  </script> -->
   
   <script type="text/javascript">
     var dropdown = document.getElementsByClassName("dropdown-btn");

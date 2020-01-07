@@ -91,8 +91,8 @@
     
           <div class="sidebar-wrapper">
             <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="/dashboard">
+              <li class="nav-item ">
+                <a class="nav-link profile-panel" href="/dashboard?type=profile">
                   <i class="material-icons">persons</i>
                   <p>Profile</p>
                 </a>
@@ -100,7 +100,7 @@
     
     
               <li class="nav-item">
-                <a class="nav-link dropdown-btn" href="/dashboard">
+                <a class="nav-link dropdown-btn " >
                   <i class="fa fa-caret-down"></i>
                   <p>Participate</p>
                 </a>
@@ -113,24 +113,27 @@
                   </a>
                 
                   <div class="dropdown-container ">
-                        <% if(user.startup == false){ %>
-                            <a class="nav-link workshops student-panel">
-                              <i class="material-icons">events</i>
-                              <p>Student Events</p>
-                            </a>
-                            <% } %>
-                    <a class="nav-link workshops">
+                      
+                    <% if(user.startup == false){ %>
+                    <a class="nav-link workshops student-panel" href="/dashboard?type=student">
+                      <i class="material-icons">events</i>
+                      <p>Student Events</p>
+                    </a>
+                    <% } %>
+    
+                    <a class="nav-link workshops startup-panel" href="/dashboard?type=startup">
                       <i class="material-icons">events</i>
                       <p>Startup Events</p>
                     </a>
                   </div>
     
                   <% if(user.startup == false){ %>
-                  <a class="nav-link workshops" href="#">
+                  <a class="nav-link workshops workshop-panel" href="/dashboard?type=workshop" >
                     <i class="material-icons">work</i>
                     <p>Workshops</p>
                   </a>
                   <% } %>
+    
     
                 </div>
             </li>
@@ -143,29 +146,28 @@
               </li>
               <li class="nav-item ">
                 <a class="nav-link" href="/payment">
-                  <i class="material-icons">content_paste</i>
+                  <i class="material-icons">payment</i>
                   <p>Payments</p>
                 </a>
               </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="/dashboard">
+              <!-- <li class="nav-item schedule-panel">
+                <a class="nav-link" href="/dashboard?type=schedule">
                   <i class="material-icons">schedules</i>
                   <p>Schedule</p>
                 </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="/dashboard">
+              </li> -->
+              <li class="nav-item campus-panel">
+                <a class="nav-link" href="/dashboard?type=campus">
                   <i class="material-icons">maps</i>
                   <p>Campus Map</p>
                 </a>
               </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="/dashboard">
+              <li class="nav-item contact-panel">
+                <a class="nav-link" href="/dashboard?type=contact">
                   <i class="material-icons">contacts</i>
                   <p>Contacts</p>
                 </a>
               </li>
-              
               <li class="nav-item ">
                     <a class="nav-link" href="/">
                       <i class="material-icons">home</i>
@@ -179,6 +181,13 @@
                         <p>Logout</p>
                     </a>
                 </li>
+              
+              <!-- <li class="nav-item active-pro ">
+                    <a class="nav-link" href="./upgrade.html">
+                        <i class="material-icons">unarchive</i>
+                        <p>Upgrade to PRO</p>
+                    </a>
+                </li> -->
             </ul>
           </div>
         </div>

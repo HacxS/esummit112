@@ -12,6 +12,7 @@ const keys = require('./security/keys');
 auth(passport);
 
 app.use(express.static(__dirname + "/public"));
+
 // DB Config
 const db = process.env.MONGDB_URL || keys.admin.mongoDB;
 
