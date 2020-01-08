@@ -389,68 +389,76 @@ router.post('/dashboard/workshop', middleware.ensureAuthenticated , (req,res) =>
   })
 });
 
-router.post('/dashboard/add-member-event/:id/:name/:event_name', middleware.ensureAuthenticated , (req,res) => {
+router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensureAuthenticated , (req,res) => {
   var event_id = req.params.id;
   var leader_id = req.user.email;
   var student_id = req.body.email;
-  var name = req.body.event_name;
-  var team_name = req.params.name;
-  
-  if(student_id != req.user.email){
-    EventRegister.find({ team_name : team_name, name : name}, (error, result2) => {
-      if(error)res.send("Error");
-      else{
-        if(result2.length >=4){
-          req.flash('error_msg','You can add upto 4 members only');
-          res.redirect('/dashboard-participate');
-        }
-        else{
-          var flag = 0;
-          result2.forEach(x => {
-            if(x.student_id == student_id){
-              flag = 1;
-              req.flash('error_msg','You have already added this member');
+  var team_name = req.params.team_name;
+  var name = req.params.name;
+  EventRegister.find({ name : name, student_id : student_id}, (err8, result8) => {
+    if(result8.length ==0){
+      if(student_id != req.user.email){
+        EventRegister.find({ team_name : team_name, name : name}, (error, result2) => {
+          if(error)res.send("Error");
+          else{
+            if(result2.length >=4){
+              req.flash('error_msg','You can add upto 4 members only');
               res.redirect('/dashboard-participate');
             }
-          });
-          if(flag == 0){
-            Event.findOne({_id : event_id}, (err, result5) => {
-              name = result5.name;
-              student = result5.student;
-              User.findOne({email : student_id}, (err, result) => {
-                if(err)res.send("Error")
-                else {
-                  if(student != result.startup){
-                    if(result){
-                      var payment = (req.user.registration && result5.student && result5.name != "Intern Connect" && result5.name!= "Panel Discussions") ? true : false;
-                      var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
-                      newEventRegister.save().then(newEvent => {
-                        req.flash('success_msg','You have added a member');
-                        res.redirect('/dashboard-participate');
-                        })
-                    }
-                    else{
-                      req.flash('success_msg','Email Id does not exist');
-                      res.redirect('/dashboard-participate');
-                    }
-                  }
-                  else{
-                    req.flash('error_msg','Could not add member as person has a startup and this is student event');
-                    res.redirect('/dashboard-participate');
-                  }
-                  
+            else{
+              var flag = 0;
+              result2.forEach(x => {
+                if(x.student_id == student_id){
+                  flag = 1;
+                  req.flash('error_msg','You have already added this member');
+                  res.redirect('/dashboard-participate');
                 }
-              })
-            });
+              });
+              if(flag == 0){
+                Event.findOne({_id : event_id}, (err, result5) => {
+                  name = result5.name;
+                  student = result5.student;
+                  User.findOne({email : student_id}, (err, result) => {
+                    if(err)res.send("Error")
+                    else {
+                      if(student != result.startup){
+                        if(result){
+                          var payment = (req.user.registration && result5.student && result5.name != "Intern Connect" && result5.name!= "Panel Discussions") ? true : false;
+                          var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
+                          newEventRegister.save().then(newEvent => {
+                            req.flash('success_msg','You have added a member');
+                            res.redirect('/dashboard-participate');
+                            })
+                        }
+                        else{
+                          req.flash('success_msg','Email Id does not exist');
+                          res.redirect('/dashboard-participate');
+                        }
+                      }
+                      else{
+                        req.flash('error_msg','Could not add member as person has a startup and this is student event');
+                        res.redirect('/dashboard-participate');
+                      }
+                      
+                    }
+                  })
+                });
+              }
+            }
           }
-        }
+        }); 
       }
-    }); 
-  }
-  else{
-    req.flash('error_msg','You cannot add yourself');
-    res.redirect('/dashboard-participate');
-  }
+      else{
+        req.flash('error_msg','You cannot add yourself');
+        res.redirect('/dashboard-participate');
+      }
+    }
+    else{
+      req.flash('error_msg','This person has already registered this event');
+      res.redirect('/dashboard-participate');
+    }
+  });
+
 });
 
 router.get('/dashboard/accept-event/:id', middleware.ensureAuthenticated , (req,res) => {
@@ -747,7 +755,7 @@ router.post('/register', (req, res) => {
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
-      successRedirect: '/dashboard',
+      successRedirect: '/dashboard?type=profile',
       failureRedirect: '/login',
       failureFlash: true,
       successFlash: true,
