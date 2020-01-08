@@ -62,8 +62,7 @@ var userSchema = new mongoose.Schema({
     required : true
   },
   esummit_id : {
-    type : String,
-    default : null
+    type : String
   },
   registration : {
     type : Boolean,
