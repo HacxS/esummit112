@@ -203,7 +203,6 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
   var status = req.query.payment_status;
   var email = req.user.email;
   var name = req.user.first_name;
-  console.log(status)
   if(status == "Credit"){
     var newPaymentDetail = new paymentDetail({ email, name, payment_id, payment_request_id, status});
     newPaymentDetail.save((err, rest)=>{
@@ -237,7 +236,6 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
     newPaymentDetail.save((err, rest)=>{
       if(err)res.send(err)
       else{
-        console.log("h")
       req.flash('error_msg','Payment Failed1');
       res.redirect('/dashboard-participate');
       }
@@ -548,22 +546,15 @@ router.post('/event-post', (req, res) => {
 });
 
 router.get("/tab",  function(req, res) {
-  User.find().sort({esummit_id: -1}).limit(1).then(ff =>{
-    
-    var esummit_id = ff[0].esummit_id;
-    esummit_id = parseInt(esummit_id.substring(3,7));
-    esummit_id = esummit_id + 1;
-    esummit_id = "ES-" + esummit_id;
-    console.log(esummit_id);
-   })
+
+  res.render('tab')
 })
 
-router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
-  User.find({ esummit_id : null}, (err, result) => {
-    console.log(result)
+/* router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
+  User.find({}, (err, result) => {
     if(err)res.send(err);
     else{
-      var i = 3631
+      var i = 3456
       result.forEach(x => {
         var eid = "ES-"+ i;
         getAThing(eid, x);
@@ -571,7 +562,7 @@ router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
       });
     }
     res.send("Success")
-  });
+  })
     
 });
 async function getAThing(eid, x) {
@@ -582,7 +573,7 @@ async function getAThing(eid, x) {
       console.log("-")
     }
   });
-}
+} */
 
 // Authentication
 
@@ -680,7 +671,6 @@ router.get('/verify', function(req,res){
 
 router.post('/register', (req, res) => {
     const first_name = req.body.first_name;
-    console.log(req.body.startup);
     const last_name = req.body.last_name
     const email = req.body.email;
     const password = req.body.password;
@@ -715,8 +705,12 @@ router.post('/register', (req, res) => {
                 res.render('register', { errors, email, password });
               } 
               else {
-                  var newUser = new User({ first_name, last_name, email, password, phone, college, city, referal_from,  startup});
-                  console.log(newUser);
+                User.find().sort({esummit_id: -1}).limit(1).then(ff =>{
+                  var esummit_id = ff[0].esummit_id;
+                  esummit_id = parseInt(esummit_id.substring(3,7));
+                  esummit_id = esummit_id + 1;
+                  esummit_id = "ES-" + esummit_id;                  
+                  var newUser = new User({ first_name, last_name, email, password, phone, college, city, referal_from,  startup, esummit_id});
                   bcrypt.genSalt(10, (err, salt) => {
                   bcrypt.hash(newUser.password, salt, (err, hash) => {
                     if (err) throw err;
@@ -727,7 +721,9 @@ router.post('/register', (req, res) => {
                       })
                       .catch(err => console.log(err));
                   })    
-                })          
+                })
+                })
+                
               }
             })
           }
@@ -744,17 +740,23 @@ router.post('/register', (req, res) => {
             res.render('register', { errors, email, password });
           } 
           else {
-            var newUser = new User({ first_name, last_name, email, password, phone, college, city, referal_from, startup });
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(newUser.password, salt, (err, hash) => {
-                if (err) throw err;
-                newUser.password = hash;
-                newUser.save().then(user => {
-                  req.flash('success_msg','You are now registered and can log in');
-                  res.redirect('/login');
-                  })
-                  .catch(err => console.log(err));
-              })    
+            User.find().sort({esummit_id: -1}).limit(1).then(ff =>{
+              var esummit_id = ff[0].esummit_id;
+              esummit_id = parseInt(esummit_id.substring(3,7));
+              esummit_id = esummit_id + 1;
+              esummit_id = "ES-" + esummit_id;  
+              var newUser = new User({ first_name, last_name, email, password, phone, college, city, referal_from, startup, esummit_id });
+              bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                  if (err) throw err;
+                  newUser.password = hash;
+                  newUser.save().then(user => {
+                    req.flash('success_msg','You are now registered and can log in');
+                    res.redirect('/login');
+                    })
+                    .catch(err => console.log(err));
+                })    
+              })
             })
           }
         })
