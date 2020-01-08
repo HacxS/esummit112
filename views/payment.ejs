@@ -145,6 +145,12 @@
                 </a>
               </li>
               <li class="nav-item ">
+                <a class="nav-link" href="/dashboard?type=payment_pricing">
+                  <i class="material-icons">info</i>
+                  <p>Payment Pricing</p>
+                </a>
+              </li>
+              <li class="nav-item ">
                 <a class="nav-link" href="/payment">
                   <i class="material-icons">payment</i>
                   <p>Payments</p>
@@ -225,10 +231,10 @@
                           <% if(user.registration == false){ %>
                           <h5 style="text-align: center;margin-top: 35px;font-size: 22px;">Student Registration - Early Bird Offer</h5>
                           <div class="row" style="    width: 80%;margin: 25px auto;">
-                            <div class="col-sm-6">
-                                <label style="position: relative;                                top: 2px;">Accomodation?</label>
+                            <div class="col-sm-4">
+                                <label style="position: relative;                                top: 2px;">Registration + Accomodation</label>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-8">
                                     <div class="form-check" style="    width: 50%;float: left;">
                                             <input onclick="ShowHideDiv()"  class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;" type="radio" name="acc" id="exampleRadios1" value="999" required>
                                             <label class="form-check-label" for="exampleRadios1">
@@ -239,7 +245,7 @@
                                           <div class="form-check" style="    width: 50%;float: left;">
                                             <input onclick="ShowHideDiv()" class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc" id="exampleRadios2" value="999" required>
                                             <label class="form-check-label" for="exampleRadios2">
-                                              No
+                                              No (Only registration)
                                             </label>
                                             <small style="margin-left: 10px;color: #0cf9b6;">Rs. 999</small>
                                           </div>

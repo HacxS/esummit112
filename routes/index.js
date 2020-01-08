@@ -540,8 +540,8 @@ router.get('/dashboard/discard-event/:team_name/:name', middleware.ensureAuthent
 
 router.post('/event-post', (req, res) => {
   var name = req.body.name;
-  var newWorkshop = new Workshop({name});
-  newWorkshop.save().then(newWorkshop => {
+  var newEvent = new Event({name, startup: false, student : true});
+  newEvent.save().then(newWorkshop => {
     req.flash('success_msg','You have created a workshop');
     res.redirect('/tab');
     });

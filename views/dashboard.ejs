@@ -64,6 +64,13 @@
 .profile-panel:hover{
   cursor: pointer;
 }
+.pric h5{
+  font-size: 15px;
+  margin-bottom: 0!important;
+}
+.pricing li{
+  font-size: 15px;
+}
   </style>
   
 </head>
@@ -130,6 +137,12 @@
             <a class="nav-link" href="/dashboard-participate">
               <i class="material-icons">content_paste</i>
               <p>My Participations</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="/dashboard?type=payment_pricing">
+              <i class="material-icons">info</i>
+              <p>Payment Pricing</p>
             </a>
           </li>
           <li class="nav-item ">
@@ -421,6 +434,202 @@
         <h3>Coming Soon!!!</h3>
     </div>
     <% } %> -->
+    <% if(type == "payment_pricing"){ %>
+    <div class="content pricing">
+      <div class="card" style="padding-bottom: 50px;">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title">Payment Pricing</h4>
+        </div>
+        <div class="container-fluid">
+          <div class="card-body">
+              <h5 style="color: white;font-size: 19px;text-decoration: underline;">General payment information:</h5>
+              <ul>
+                <li>Payment includes one time registration fee of Rs. 999</li>
+                <li>Accomodation fee has to be paid if opted for.</li>
+                <li>You have to pay for the desired events or workshops you registered for.</li>
+                <li>Student events for students are free once registration fee is paid.</li>
+                <li>For startup events you have to pay its allocated fee to participate.</li>
+              </ul>
+              
+              <div class="table-responsive">
+                  <table class="table">
+                      <thead class=" text-primary">
+                          <th style="color: white;font-size: 19px;">Payment Types</th>
+                          <th style="color: white;font-size: 19px;">price(in Rs.)</th>
+                      </thead>
+                      <tbody class="pric">
+                        <tr>
+                            <td>
+                                <h5> Student Registration (Early Bird) </h5>
+                            </td>
+                            <td class="event_date">
+                                999
+                            </td>
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Student Registration (Without Accommodation) </h5>
+                            </td>
+                            <td class="event_date">
+                                999
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Student Registration (With Accommodation) </h5>
+                            </td>
+                            <td class="event_date">
+                                1499
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Professional Registration (Early Bird) for Startup Personnel </h5>
+                            </td>
+                            <td class="event_date">
+                                999
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Professional Registration for Startup Personnel </h5>
+                            </td>
+                            <td class="event_date">
+                                1299
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> KPMG's Lean Six Sigma Green Belt Training Programme for students </h5>
+                            </td>
+                            <td class="event_date">
+                                7499
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> E-Carnival (Early Bird) for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                2499
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> E-Carnival for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                2999
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Incubate Me (Early Bird) </h5>
+                            </td>
+                            <td class="event_date">
+                                299
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Incubate Me </h5>
+                            </td>
+                            <td class="event_date">
+                                499
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Speed Dating (Early Bird) for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                499
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Speed Dating for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                799
+                            </td>
+                    
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Intern Connect (Early Bird) for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                999
+                            </td>
+                    
+                            
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Intern Connect for Startups </h5>
+                            </td>
+                            <td class="event_date">
+                                1999
+                            </td>
+                    
+                            
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Accommodation (per person cost in twin sharing room outside campus) </h5>
+                            </td>
+                            <td class="event_date">
+                                2100
+                            </td>
+                    
+                            
+                        </tr>
+        
+                        <tr>
+                            <td>
+                                <h5> Accommodation (inside campus) </h5>
+                            </td>
+                            <td class="event_date">
+                                500
+                            </td>
+                    
+                        </tr>
+        
+                        
+                        </tbody>
+                  </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
 
     <% if(type == "campus"){ %>
     <div class="content campus">
@@ -435,6 +644,7 @@
             <h4 class="card-title">Contact Details</h4>
         </div>
         <div class="container-fluid">
+          <p style="font-size: 17px;color:white;margin-top: 25px;"> <span style="text-decoration: underline;"> For any queries contact us at</span> - support@esummitiitbhu.com</p>
           <p style="font-size: 17px;color:white;margin-top: 25px;text-decoration: underline;">For any tech related issues contact:</p>
           <div class="card-body">
               <div class="table-responsive">
