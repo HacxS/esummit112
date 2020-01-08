@@ -318,7 +318,7 @@ router.get('/dashboard-participate', middleware.ensureAuthenticated , (req,res) 
             var len = result.length;
             var i=1;
             result.forEach(a => {
-              EventRegister.find({ team_name : a.team_name, name: a.name}, (err2, result2) => {
+              EventRegister.find({ team_name : a.team_name, name: a.name, leader_id : a.leader_id}, (err2, result2) => {
                 if(err2)res.send("Error2");
                 else{
                   arr.push({ team_name : a.team_name, data : result2 });
