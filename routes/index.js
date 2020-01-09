@@ -164,6 +164,7 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                   res.redirect('/payment')
                 }
                 else{
+                  
                   data.purpose = "E-Summit 2020 IIT(BHU) Varanasi: "+ req.user.esummit_id;            // REQUIRED
                   data.amount = total_amount;
                   data.currency                = 'INR';
@@ -180,9 +181,25 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                     if (error) {
                       // some error
                     } else {
+                      response = JSON.parse(response);
                       // Payment redirection link at response.payment_request.longurl
-                      const obj = JSON.parse(response);
-                      res.redirect(obj.payment_request.longurl)
+                      if(response.success == false){
+                        if(response.message.phone){
+                          req.flash('error_msg', response.message.phone[0]);
+                          res.redirect('/payment');
+                        }
+                        else if(response.message.email){
+                          req.flash('error_msg', response.message.email[0]);
+                          res.redirect('/payment');
+                        }
+                        else{
+                          req.flash('error_msg', "Error Occured");
+                          res.redirect('/payment');
+                        }
+                      }
+                      else{
+                        res.redirect(response.payment_request.longurl)
+                      }
                     }
                   });
                 }
@@ -536,7 +553,7 @@ router.get('/dashboard/discard-event/:team_name/:name', middleware.ensureAuthent
 
 // Test Routes
 
-router.get('/4554545', (req, res) =>{
+/* router.get('/4554545', (req, res) =>{
   var arr =[];
   User.find({}, (err, re) =>{
    var i =0;
@@ -554,16 +571,16 @@ router.get('/4554545', (req, res) =>{
     
   });
   
-})
+}) */
 
-router.post('/event-post', (req, res) => {
+/* router.post('/event-post', (req, res) => {
   var name = req.body.name;
   var newEvent = new Event({name, startup: false, student : true});
   newEvent.save().then(newWorkshop => {
     req.flash('success_msg','You have created a workshop');
     res.redirect('/tab');
     });
-});
+}); */
 
 router.get("/tab",  function(req, res) {
 
