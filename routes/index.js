@@ -536,6 +536,26 @@ router.get('/dashboard/discard-event/:team_name/:name', middleware.ensureAuthent
 
 // Test Routes
 
+router.get('/4554545', (req, res) =>{
+  var arr =[];
+  User.find({}, (err, re) =>{
+   var i =0;
+   var l = re.length;
+    re.forEach(x => {
+      if(re.referal_code){
+        console.log({id : re._id, referal_code : re.referal_code})
+        arr.push({id : re._id, referal_code : re.referal_code});
+      }
+      if(i==l-1){
+        res.send(arr)
+      }
+      i++;
+    });
+    
+  });
+  
+})
+
 router.post('/event-post', (req, res) => {
   var name = req.body.name;
   var newEvent = new Event({name, startup: false, student : true});
