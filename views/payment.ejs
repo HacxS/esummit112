@@ -229,7 +229,7 @@
                         <% if(user.startup == false){ %>
                         <form action="/payment" method="post">
                           <% if(user.registration == false){ %>
-                          <h5 style="text-align: center;margin-top: 35px;font-size: 22px;">Student Registration - Early Bird Offer</h5>
+                          <h5 style="text-align: center;margin-top: 35px;font-size: 22px;">Student Registration - Early Bird Offer (till 16th Jan'20) </h5>
                           <div class="row" style="    width: 80%;margin: 25px auto;">
                             <div class="col-sm-4">
                                 <label style="position: relative;                                top: 2px;">Registration + Accomodation</label>
@@ -240,7 +240,7 @@
                                             <label class="form-check-label" for="exampleRadios1">
                                               Yes
                                             </label>
-                                            <small style="margin-left: 10px;color: #0cf9b6;">Rs. 999 - Early Bird!!!</small>
+                                            <small style="margin-left: 10px;color: #0cf9b6;">Rs. 999 - Early Bird!!</small>
                                           </div>
                                           <div class="form-check" style="    width: 50%;float: left;">
                                             <input onclick="ShowHideDiv()" class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc" id="exampleRadios2" value="999" required>
@@ -325,7 +325,7 @@
                             <% if(user.registration == false){ %>
                               <div class="row" style="margin-top: 45px;">
                                 <div class="col-6" ><h5>Professional Registration Fee</h5></div>
-                                <div class="col-6"><span>Rs. 999 <small style="margin-left: 10px;color: #0cf9b6;">Early Bird Offer!!!</small></span></div>
+                                <div class="col-6"><span>Rs. 999 <small style="margin-left: 10px;color: #0cf9b6;">Early Bird Offer!!! (till 16th Jan'20)</small></span></div>
                               </div>
                                
                               <div class="row" style="width: 80%;margin: 25px auto;">
@@ -635,7 +635,8 @@
         });
       </script>
       <script>
-        var x = parseInt($('.tt').text())
+        var x = parseInt($('.tt').text());
+        
         
         function ShowHideDiv() {
         var chkYes = document.getElementById("exampleRadios1");

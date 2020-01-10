@@ -13,7 +13,9 @@ var bcrypt = require('bcryptjs');
 var nodemailer = require("nodemailer");
 const keys = require('../security/keys');
 const refer = require('../security/refer');
-var request= require('request');
+var async = require("async");
+var crypto = require("crypto");
+
 
 var Insta = require('instamojo-nodejs');
 Insta.setKeys('56cff578f3406493616ced90f2a855c0', 'acdd9b4a9c93ce7825438d2cd4dc56ef')
@@ -198,12 +200,34 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                         }
                       }
                       else{
-                        res.redirect(response.payment_request.longurl)
+                        var accomodation = "yes";
+                        var type = "campus";
+                        if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 0){
+                          accomodation = "no";
+                          type = "none";
+                        }
+                        else if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1 && parseInt(req.body.acc) == 2100){
+                          accomodation = "yes";
+                          type = "hotel";
+                        }
+                        else if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1 && parseInt(req.body.acc) == 500){
+                          accomodation = "yes";
+                          type = "campus";
+                        }
+                        else if(req.user.startup == false && req.user.registration == false){
+                          accomodation = "yes";
+                          type = "campus";
+                        }
+                        User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : accomodation, type : type}}, (err10, result10)=>{
+                          if(err10)res.send(err10);
+                          else{
+                            res.redirect(response.payment_request.longurl)
+                          }
+                        })
                       }
                     }
                   });
                 }
-
             }
           })
         }
@@ -253,7 +277,7 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
     newPaymentDetail.save((err, rest)=>{
       if(err)res.send(err)
       else{
-      req.flash('error_msg','Payment Failed1');
+      req.flash('error_msg','Payment Failed');
       res.redirect('/dashboard-participate');
       }
     });
@@ -269,13 +293,23 @@ router.post('/payment-webhook-14567899', (req, res) => {
   var status = req.body.status;
 
  
-    var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
-    webhookdetail.save().then(newE => {
-      res.send("Success")
+  if(status == "Failed"){
+    User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : null, type : null}}, (err10, result10)=>{
+      if(err10)res.send(err10);
+      else{
+        var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
+        webhookdetail.save().then(newE => {
+          res.send("Success")
+        })
+      }
     })
-  
-
-
+  }
+  else{
+    var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
+        webhookdetail.save().then(newE => {
+          res.send("Success")
+        })
+  }
 })
 
 // Dashboard
@@ -410,14 +444,14 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
   var student_id = req.body.email;
   var team_name = req.params.team_name;
   var name = req.params.name;
-  EventRegister.find({ name : name, student_id : student_id}, (err8, result8) => {
-    if(result8.length ==0){
-      if(student_id != req.user.email){
+  if(student_id != req.user.email){
+    EventRegister.find({ name : name, student_id : student_id}, (err8, result8) => {
+      if(result8.length ==0){
         EventRegister.find({ team_name : team_name, name : name}, (error, result2) => {
           if(error)res.send("Error");
           else{
             if(result2.length >=4){
-              req.flash('error_msg','You can add upto 4 members only');
+              req.flash('error_msg','You can add upto 4 members only.');
               res.redirect('/dashboard-participate');
             }
             else{
@@ -425,7 +459,7 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
               result2.forEach(x => {
                 if(x.student_id == student_id){
                   flag = 1;
-                  req.flash('error_msg','You have already added this member');
+                  req.flash('error_msg','You have already added this member.');
                   res.redirect('/dashboard-participate');
                 }
               });
@@ -436,25 +470,24 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
                   User.findOne({email : student_id}, (err, result) => {
                     if(err)res.send("Error")
                     else {
-                      if(student != result.startup){
-                        if(result){
+                      if(result){
+                        if(student != result.startup){
                           var payment = (req.user.registration && result5.student && result5.name != "Intern Connect" && result5.name!= "Panel Discussions") ? true : false;
                           var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
                           newEventRegister.save().then(newEvent => {
-                            req.flash('success_msg','You have added a member');
+                            req.flash('success_msg','You have added a member.');
                             res.redirect('/dashboard-participate');
                             })
                         }
                         else{
-                          req.flash('success_msg','Email Id does not exist');
+                          req.flash('error_msg','Could not add this member as this person registered as a startup and this is student event.');
                           res.redirect('/dashboard-participate');
                         }
                       }
                       else{
-                        req.flash('error_msg','Could not add member as person has a startup and this is student event');
+                        req.flash('error_msg','This person has not registered on Esummit yet!');
                         res.redirect('/dashboard-participate');
                       }
-                      
                     }
                   })
                 });
@@ -464,16 +497,15 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
         }); 
       }
       else{
-        req.flash('error_msg','You cannot add yourself');
+        req.flash('error_msg','This person has already registered this event.');
         res.redirect('/dashboard-participate');
       }
-    }
-    else{
-      req.flash('error_msg','This person has already registered this event');
-      res.redirect('/dashboard-participate');
-    }
-  });
-
+    });
+  }
+  else{
+    req.flash('error_msg','You cannot add yourself.');
+    res.redirect('/dashboard-participate');
+  }
 });
 
 router.get('/dashboard/accept-event/:id', middleware.ensureAuthenticated , (req,res) => {
@@ -584,10 +616,12 @@ router.get('/dashboard/discard-event/:team_name/:name', middleware.ensureAuthent
 
 router.get("/tab",  function(req, res) {
 
-  res.render('tab')
+  User.updateMany({},{$set:{accomodation: null, type: null}}).then(rest=>{
+    console.log("=")
+  })
 })
 
-/* router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
+router.get('/ada4545454fe6er6f5ef6f5e', (req, res) => {
   User.find({}, (err, result) => {
     if(err)res.send(err);
     else{
@@ -610,7 +644,7 @@ async function getAThing(eid, x) {
       console.log("-")
     }
   });
-} */
+}
 
 // Authentication
 
@@ -815,6 +849,119 @@ router.get("/logout",  function(req, res) {
   req.logout(); 
   req.flash('success_msg','Successfully logged out');
   res.redirect('/');
+});
+
+
+// forgot password
+router.get('/forgot', function(req, res) {
+  res.render('forgot');
+});
+
+router.post('/forgot', function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+          req.flash('error_msg', 'No account with that email address exists.');
+          return res.redirect('/forgot');
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      });
+    },
+    function(token, user, done) {
+      
+      var mailOptions = {
+        to: user.email,
+        from: keys.admin.from_email,
+        subject: 'Esummit-20 Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/reset?token=' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        console.log('mail sent');
+        req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/forgot');
+  });
+});
+
+router.get('/reset', function(req, res) {
+  User.findOne({ resetPasswordToken: req.query.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+      req.flash('error_msg', 'Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    res.render('reset', {token: req.query.token});
+  });
+});
+
+router.post('/reset/:token', function(req, res) {
+  async.waterfall([
+    function(done) {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        if (!user) {
+          req.flash('error_msg', 'Password reset token is invalid or has expired.');
+          return res.redirect('back');
+        }
+        if(req.body.password === req.body.confirm) {
+
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(req.body.password, salt, (err, hash) => {
+              if (err) throw err;
+              var password = hash;
+              User.findOneAndUpdate({email: user.email}, {$set:{password: password}}, (err3, doc) => {
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpires = undefined;
+                user.save(function(err) {
+                  req.logIn(user, function(err) {
+                    done(err, user);
+                  });
+                });
+                })
+            })    
+          })
+        
+        } else {
+            req.flash("error_msg", "Passwords do not match.");
+            return res.redirect('back');
+        }
+      });
+    },
+    function(user, done) {
+      
+      var mailOptions = {
+        to: user.email,
+        from: keys.admin.from_email,
+        subject: 'Your password has been changed',
+        text: 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        req.flash('success_msg', 'Success! Your password has been changed.');
+        done(err);
+      });
+    }
+  ], function(err) {
+    res.redirect('/dashboard?type=profile');
+  });
 });
 
 

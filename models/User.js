@@ -67,7 +67,18 @@ var userSchema = new mongoose.Schema({
   registration : {
     type : Boolean,
     default : false
+  },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+  accomodation : {
+    type : String,
+    default: null
+  },
+  type : {
+    type: String,
+    default: null
   }
+
 })
 
   userSchema.plugin(passportLocalMongoose);
