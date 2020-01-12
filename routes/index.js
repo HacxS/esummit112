@@ -127,6 +127,7 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                   data.buyer_name              = req.user.first_name;
                   data.email                   = req.user.email;
                   data.phone                   = req.user.phone;
+                  data.webhook                 = 'https://esummitiitbhu.com/payment-webhook-14567899'
                   data.send_sms                = 'True';
                   data.send_email              = 'True';
                   data.allow_repeated_payments = 'False';                  
