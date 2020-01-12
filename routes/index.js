@@ -221,6 +221,7 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                         User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : accomodation, type : type}}, (err10, result10)=>{
                           if(err10)res.send(err10);
                           else{
+                            console.log(result10)
                             res.redirect(response.payment_request.longurl)
                           }
                         })
@@ -258,7 +259,6 @@ router.get('/pay789456', middleware.ensureAuthenticated, (req, res)=>{
                 User.findOneAndUpdate({email : req.user.email}, {$set:{registration : true}}, (err3, reuslt3) =>{
                   if(err3)res.send("Error");
                   else{
-                    
                     req.flash('success_msg','Payment Success');
                     res.redirect('/dashboard-participate');
                   }
@@ -305,10 +305,15 @@ router.post('/payment-webhook-14567899', (req, res) => {
     })
   }
   else{
-    var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
+    User.findOneAndUpdate({email: req.user.email}, {$set:{ registration: true}}, (err10, result10)=>{
+      if(err10)res.send(err10);
+      else{
+        var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
         webhookdetail.save().then(newE => {
           res.send("Success")
         })
+      }
+    })
   }
 })
 
@@ -401,7 +406,7 @@ router.post('/dashboard/event', middleware.ensureAuthenticated , (req,res) => {
   var team_name = req.body.team_name;
   Event.findOne({_id : event_id}, (err, result) => {
     name = result.name;
-    var payment = (req.user.registration && result.student && result.name != "Intern Connect" && result.name!= "Panel Discussions") ? true : false;
+    var payment = (req.user.registration && result.name != "Intern Connect" && result.name!= "E-Carnival" && result.name!= "Incubate Me" && result.name!= "Speed Dating") ? true : false;
     var newEventRegister = new EventRegister({ event_id, name, team_name, leader_id, student_id, status, payment: payment});
     newEventRegister.save().then(newEvent => {
       req.flash('success_msg','You have registered this event');
@@ -472,7 +477,7 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
                     else {
                       if(result){
                         if(student != result.startup){
-                          var payment = (req.user.registration && result5.student && result5.name != "Intern Connect" && result5.name!= "Panel Discussions") ? true : false;
+                          var payment = (req.user.registration && result5.name != "Intern Connect" && result.name!= "E-Carnival" && result.name!= "Incubate Me" && result.name!= "Speed Dating") ? true : false;
                           var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
                           newEventRegister.save().then(newEvent => {
                             req.flash('success_msg','You have added a member.');
