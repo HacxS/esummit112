@@ -840,6 +840,34 @@ router.post('/register', (req, res) => {
     }
   });
 
+router.post('/referal-submit', (req, res) => {
+  var code = req.body.code;
+  var flag= 0;
+  if(code !=null){
+    refer.referal.forEach(x => {
+      if(x.referal_code == code){
+        flag= 1;
+        User.findOneAndUpdate({email: req.user.email}, {$set:{referal_from : code}}, (err, result) =>{
+          if(err)res.send(err);
+          else{
+            req.flash('success_msg','Referal Completed');
+            res.redirect('/dashboard?type=profile');
+          }
+        });
+      }
+    });
+    if(flag === 0){
+      req.flash('error_msg','Invalid Referal Code');
+      res.redirect('/dashboard?type=profile');
+    }
+  }
+  else{
+    req.flash('error_msg','Referal Code Empty');
+    res.redirect('/dashboard?type=profile');
+  }
+
+})
+
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', {
       successRedirect: '/dashboard?type=profile',
