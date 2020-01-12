@@ -236,14 +236,14 @@
                             </div>
                             <div class="col-sm-8">
                                     <div class="form-check" style="    width: 50%;float: left;">
-                                            <input onclick="ShowHideDiv()"  class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;" type="radio" name="acc" id="exampleRadios1" value="999" required>
+                                            <input  class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;" type="radio" name="acc" id="exampleRadios1" value="yes" required>
                                             <label class="form-check-label" for="exampleRadios1">
                                               Yes
                                             </label>
                                             <small style="margin-left: 10px;color: #0cf9b6;">Rs. 999 - Early Bird!!</small>
                                           </div>
                                           <div class="form-check" style="    width: 50%;float: left;">
-                                            <input onclick="ShowHideDiv()" class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc" id="exampleRadios2" value="999" required>
+                                            <input  class="form-check-input" class="rad" style="position: relative;top: 2px;opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc" id="exampleRadios2" value="no" required>
                                             <label class="form-check-label" for="exampleRadios2">
                                               No (Only registration)
                                             </label>
@@ -286,35 +286,23 @@
                             
                           <% } %>
                         </div>
-                        <div >
-                         <h5 style="margin: 10px 0px;font-size: 19px;color: #AAA;">Registered Startup Events : </h5> 
-                          
-                          <% if(startupEvents.length != 0){ %>
-                            <% startupEvents.forEach(u => { %>
-                              <div class="row" style="margin-left: 20px;">
-                                <div class="col-6">
-                                  <p><%= u.data.name %></p>
-                                </div>
-                                <div class="col-6">
-                                  <p>Rs. <%= u.price %></p>
-                                </div>
-                              </div>
-                            <% }) %>
-                          <% }else{ %>
-                            <div class="row"  style="margin-left: 20px;">
-                              <div class="col-12"><p>No new event added for payment. Please first make you team.</p></div>
-                              
-                            </div>
-                            
-                          <% } %>
-                        </div>
+
                         <hr style="background-color: white;width: 75%;margin: 17px 0;">
                         <div class="row" style="font-size: 19px;color: #AAA;">
                           <div class="col-6">
                             <p>Total : </p>
                           </div>
                           <div class="col-6">
-                            <p  style="color: white;font-size: 15px;position: relative;left: 20px;font-weight: bold;">Rs. <span class="tt"><%= amount %></span></p>
+                            
+                            <p  style="color: white;font-size: 15px;position: relative;left: 20px;font-weight: bold;">
+                              Rs. <span class="tt">
+                              <% if(user.registration == false){ %> 
+                              <%= amount + 999 %>
+                              <% }else{ %>
+                                <%= amount %>
+                                <% } %>
+                              </span>
+                            </p>
                           </div>
                         </div>
                         <button class="btn btn-outline-warning" style="margin-top: 30px;" type="submit">Pay</button>
@@ -337,13 +325,13 @@
                                       <div class="col-6">
                                         <div class="row">
                                           <div class="col-6">
-                                            <input  style="cursor: pointer;" onclick="ShowHideDiv2()"  class="form-check-input"  style="opacity: 1;z-index: 9;height: max-content;width: max-content;" type="radio" name="acc2" id="exampleRadios11" value="1" required>
+                                            <input  style="cursor: pointer;"  class="form-check-input"  style="opacity: 1;z-index: 9;height: max-content;width: max-content;" type="radio" name="acc" id="exampleRadios11" value="yes" required checked>
                                             <label  style="cursor: pointer;" class="form-check-label" for="exampleRadios11">
                                               Yes
                                             </label>
                                           </div>
                                           <div class="col-6">
-                                            <input  style="cursor: pointer;" onclick="ShowHideDiv2()" class="form-check-input"  style="opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc2" id="exampleRadios22" value="0" required checked>
+                                            <input  style="cursor: pointer;" class="form-check-input"  style="opacity: 1;z-index: 9;height: max-content;width: max-content;"  type="radio" name="acc" id="exampleRadios22" value="no" required>
                                             <label  style="cursor: pointer;" class="form-check-label" for="exampleRadios22">
                                               No
                                             </label>
@@ -356,25 +344,7 @@
                                   
                                    
                                 </div>
-                                <div class="col-12 jjj">
-                                        <div class="form-check" style="    width: 50%;float: left;">
-                                                <input onclick="ShowHideDiv3()"  class="form-check-input" style="opacity: 1;z-index: 9;width: fit-content;height: fit-content;" type="radio" name="acc" id="exampleRadios1" value="2100" required >
-                                                <label class="form-check-label" for="exampleRadios1">
-                                                  Accommodation (per person cost in twin sharing room outside campus)
-                                                </label>
-                                                <br>
-                                                <small style="margin-left: 10px;color: #0cf9b6;">Rs. 2100</small>
-                                              </div>
-                                              <div class="form-check" style="    width: 50%;float: left;">
-                                                <input onclick="ShowHideDiv3()" class="form-check-input"  style="opacity: 1;z-index: 9;width: fit-content;height: fit-content;"  type="radio" name="acc" id="exampleRadios2" value="500" required checked>
-                                                <label class="form-check-label" for="exampleRadios2">
-                                                  Accommodation (inside campus)
-                                                  
-                                                </label>
-                                                <br>
-                                                <small style="margin-left: 10px;color: #0cf9b6;">Rs. 500</small>
-                                              </div>
-                                </div>   
+                                
                             </div>
                           <% }else{ %>
                             <h5 style="margin-top: 20px;margin-bottom: 20px; font-size: 20px; color:rgb(0, 243, 255);text-decoration: underline;">Professional Registration Done.</h5>
@@ -634,48 +604,7 @@
     
         });
       </script>
-      <script>
-        var x = parseInt($('.tt').text());
-        
-        
-        function ShowHideDiv() {
-        var chkYes = document.getElementById("exampleRadios1");
-        var i = chkYes.checked ? 999 : 999;
-        $('.tt').text(x + i)
-        }
-
-        function ShowHideDiv3() {
-        var chkYes = document.getElementById("exampleRadios1");
-        var i = chkYes.checked ? 2100 : 500;
-        $('.tt').text(x + i)
-        }
-
-        $('.jjj').hide();
-        function ShowHideDiv2() {
-        var chkYes2 = document.getElementById("exampleRadios11");
-        var chkYes4 = document.getElementById("exampleRadios22");
-        
-        chkYes2.checked ? $('.jjj').show() : $('.jjj').hide();
-        var chkYes = document.getElementById("exampleRadios1");
-        var chkYes3 = document.getElementById("exampleRadios2");
-        var i = 0;
-        if(chkYes.checked){
-          i=2100
-        }
-        if(chkYes3.checked){
-          i=500
-        }
-        
-        if(chkYes2.checked == true){
-          var y = parseInt($('.tt').text())
-          $('.tt').text(x + i)
-        }
-        if(chkYes4.checked == true){
-          $('.tt').text(x )
-        }
-        }
-
-      </script>
+      
     </body>
     
     </html>

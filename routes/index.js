@@ -65,30 +65,10 @@ router.get('/payment', middleware.ensureAuthenticated, (req, res) => {
             else{
               arr2=[]
                 result3.forEach(u => {
-                  if(u.name == "E-Carnival"){
+                  if(u.name == "E-Carnival" && req.user.startup == true){
                     total_amount = total_amount + 2499;
                     arr2.push({price : 2499, data : u})
-                  }
-                  if(u.name == "Incubate Me"){
-                    total_amount = total_amount + 299;
-                    arr2.push({price : 299, data : u})
-                  }
-                  if(u.name == "Speed Dating"){
-                    total_amount = total_amount + 499;
-                    arr2.push({price : 499, data : u})
-                  }
-                  if(u.name == "Intern Connect"){
-                    total_amount = total_amount + 999;
-                    arr2.push({price : 999, data : u})
-                  }
-                  if(u.name == "LoneWolf Challenge"){
-                    total_amount = total_amount + 0;
-                    arr2.push({price : 0, data : u})
-                  }
-                  if(u.name == "Panel Discussions"){
-                    total_amount = total_amount + 0;
-                    arr2.push({price : 0, data : u})
-                  }
+                  }                  
                 });
                 res.render('payment', {user: req.user, workshop : arr, startupEvents : arr2, amount : total_amount});
               
@@ -126,40 +106,14 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
             else{
               arr2=[]
                 result3.forEach(u => {
-                  if(u.name == "E-Carnival"){
+                  if(u.name == "E-Carnival" && req.user.startup == true){
                     total_amount = total_amount + 2499;
                     arr2.push({price : 2499, data : u})
                   }
-                  if(u.name == "Incubate Me"){
-                    total_amount = total_amount + 299;
-                    arr2.push({price : 299, data : u})
-                  }
-                  if(u.name == "Speed Dating"){
-                    total_amount = total_amount + 499;
-                    arr2.push({price : 499, data : u})
-                  }
-                  if(u.name == "Intern Connect"){
-                    total_amount = total_amount + 999;
-                    arr2.push({price : 999, data : u})
-                  }
-                  if(u.name == "LoneWolf Challenge"){
-                    total_amount = total_amount + 0;
-                    arr2.push({price : 0, data : u})
-                  }
-                  if(u.name == "Panel Discussions"){
-                    total_amount = total_amount + 0;
-                    arr2.push({price : 0, data : u})
-                  }
                 });
                 var data = new Insta.PaymentData();
-                if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1){
-                  total_amount = total_amount + parseInt(req.body.acc) + 999;
-                }
-                if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 0){
+                if(req.user.registration == false){
                   total_amount = total_amount + 999;
-                }
-                if(req.user.startup == false && req.user.registration == false){
-                  total_amount = total_amount + parseInt(req.body.acc);
                 }
                 if(total_amount == 0){
                   req.flash('error_msg','You cannot pay a zero amount');
@@ -173,7 +127,6 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                   data.buyer_name              = req.user.first_name;
                   data.email                   = req.user.email;
                   data.phone                   = req.user.phone;
-                  data.webhook                 = 'https://esummitiitbhu.com/payment-webhook-14567899'
                   data.send_sms                = 'True';
                   data.send_email              = 'True';
                   data.allow_repeated_payments = 'False';                  
@@ -196,29 +149,12 @@ router.post('/payment', middleware.ensureAuthenticated, (req, res) => {
                         }
                         else{
                           req.flash('error_msg', "Error Occured");
+                          console.log(response);
                           res.redirect('/payment');
                         }
                       }
-                      else{
-                        var accomodation = "yes";
-                        var type = "campus";
-                        if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 0){
-                          accomodation = "no";
-                          type = "none";
-                        }
-                        else if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1 && parseInt(req.body.acc) == 2100){
-                          accomodation = "yes";
-                          type = "hotel";
-                        }
-                        else if(req.user.startup == true && req.user.registration == false && parseInt(req.body.acc2) == 1 && parseInt(req.body.acc) == 500){
-                          accomodation = "yes";
-                          type = "campus";
-                        }
-                        else if(req.user.startup == false && req.user.registration == false){
-                          accomodation = "yes";
-                          type = "campus";
-                        }
-                        User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : accomodation, type : type}}, (err10, result10)=>{
+                      else{                        
+                        User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : req.body.acc}}, (err10, result10)=>{
                           if(err10)res.send(err10);
                           else{
                             console.log(result10)
@@ -294,7 +230,7 @@ router.post('/payment-webhook-14567899', (req, res) => {
 
  
   if(status == "Failed"){
-    User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : null, type : null}}, (err10, result10)=>{
+    User.findOneAndUpdate({email: req.user.email}, {$set:{ accomodation : null}}, (err10, result10)=>{
       if(err10)res.send(err10);
       else{
         var webhookdetail = new webhook({amount, email, name, payment_id, payment_request_id, status});
@@ -406,7 +342,7 @@ router.post('/dashboard/event', middleware.ensureAuthenticated , (req,res) => {
   var team_name = req.body.team_name;
   Event.findOne({_id : event_id}, (err, result) => {
     name = result.name;
-    var payment = (req.user.registration && result.name != "Intern Connect" && result.name!= "E-Carnival" && result.name!= "Incubate Me" && result.name!= "Speed Dating") ? true : false;
+    var payment = ( (req.user.startup && req.user.registration && result.name!= "E-Carnival" ) || (!req.user.startup && req.user.registration) ) ? true : false;
     var newEventRegister = new EventRegister({ event_id, name, team_name, leader_id, student_id, status, payment: payment});
     newEventRegister.save().then(newEvent => {
       req.flash('success_msg','You have registered this event');
@@ -476,18 +412,14 @@ router.post('/dashboard/add-member-event/:id/:team_name/:name', middleware.ensur
                     if(err)res.send("Error")
                     else {
                       if(result){
-                        if(student != result.startup){
-                          var payment = (req.user.registration && result5.name != "Intern Connect" && result.name!= "E-Carnival" && result.name!= "Incubate Me" && result.name!= "Speed Dating") ? true : false;
+                        
+                          var payment = ( (result.startup && result.registration && result5.name!= "E-Carnival" ) || (!result.startup && result.registration) ) ? true : false;
                           var newEventRegister = new EventRegister({ event_id, team_name, name, leader_id, student_id, payment : payment});
                           newEventRegister.save().then(newEvent => {
                             req.flash('success_msg','You have added a member.');
                             res.redirect('/dashboard-participate');
                             })
-                        }
-                        else{
-                          req.flash('error_msg','Could not add this member as this person registered as a startup and this is student event.');
-                          res.redirect('/dashboard-participate');
-                        }
+                        
                       }
                       else{
                         req.flash('error_msg','This person has not registered on Esummit yet!');
